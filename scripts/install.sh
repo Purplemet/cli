@@ -26,14 +26,8 @@ esac
 # Determine version
 if [ -z "$VERSION" ]; then
   echo "[*] Fetching latest version..."
-  # Try GitLab first, fallback to GitHub
-  VERSION=$(curl -sSf "https://dev.purplemet.com/api/v4/projects/purplemet%2Fcli/releases" 2>/dev/null \
-    | grep -o '"tag_name":"[^"]*"' | head -1 | cut -d'"' -f4) || true
-
-  if [ -z "$VERSION" ]; then
-    VERSION=$(curl -sSf "https://api.github.com/repos/${REPO}/releases/latest" 2>/dev/null \
-      | grep -o '"tag_name": "[^"]*"' | cut -d'"' -f4) || true
-  fi
+  VERSION=$(curl -sSf "https://api.github.com/repos/${REPO}/releases/latest" 2>/dev/null \
+    | grep -o '"tag_name": "[^"]*"' | cut -d'"' -f4) || true
 
   if [ -z "$VERSION" ]; then
     echo "Error: could not determine latest version. Set VERSION env var manually." >&2
@@ -45,23 +39,23 @@ EXT=""
 [ "$OS" = "windows" ] && EXT=".exe"
 FILENAME="${BINARY}-${OS}-${ARCH}${EXT}"
 
-# Try GitLab release, fallback to GitHub
-DOWNLOAD_URL="https://dev.purplemet.com/purplemet/cli/-/releases/${VERSION}/downloads/${FILENAME}"
+DOWNLOAD_URL="https://github.com/${REPO}/releases/download/${VERSION}/${FILENAME}"
 echo "[*] Downloading ${BINARY} ${VERSION} (${OS}/${ARCH})..."
-if ! curl -sSLf "$DOWNLOAD_URL" -o "/tmp/${FILENAME}" 2>/dev/null; then
-  DOWNLOAD_URL="https://github.com/${REPO}/releases/download/${VERSION}/${FILENAME}"
-  curl -sSLf "$DOWNLOAD_URL" -o "/tmp/${FILENAME}" || {
-    echo "Error: download failed from both GitLab and GitHub" >&2
-    exit 1
-  }
-fi
+curl -sSLf "$DOWNLOAD_URL" -o "/tmp/${FILENAME}" || {
+  echo "Error: download failed from ${DOWNLOAD_URL}" >&2
+  exit 1
+}
 
 # Verify checksum if available
 CHECKSUMS_URL="${DOWNLOAD_URL%/*}/checksums.txt"
 if curl -sSLf "$CHECKSUMS_URL" -o "/tmp/checksums.txt" 2>/dev/null; then
   EXPECTED=$(grep "$FILENAME" /tmp/checksums.txt | awk '{print $1}')
   if [ -n "$EXPECTED" ]; then
-    ACTUAL=$(shasum -a 256 "/tmp/${FILENAME}" | awk '{print $1}')
+    if command -v sha256sum > /dev/null 2>&1; then
+      ACTUAL=$(sha256sum "/tmp/${FILENAME}" | awk '{print $1}')
+    else
+      ACTUAL=$(shasum -a 256 "/tmp/${FILENAME}" | awk '{print $1}')
+    fi
     if [ "$EXPECTED" != "$ACTUAL" ]; then
       echo "Error: checksum mismatch" >&2
       echo "  Expected: $EXPECTED" >&2
