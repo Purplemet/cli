@@ -1,12 +1,14 @@
 # Purplemet CLI
 
-Command-line tool for running web application security analyses via the [Purplemet](https://purplemet.com) platform.
+This repository hosts the public release binaries and installation script for **Purplemet CLI**, a command-line tool for running web application security analyses via the [Purplemet](https://purplemet.com) platform.
+
+> The source code is maintained on a separate GitLab repository and will be made public soon.
 
 ## Installation
 
 ### Binary
 
-Download from [Releases](https://github.com/purplemet/cli/releases).
+Download the latest binary for your platform from [Releases](https://github.com/purplemet/cli/releases).
 
 ### Docker
 
