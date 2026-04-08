@@ -4,13 +4,6 @@ Command-line tool for running web application security analyses via the [Purplem
 
 ## Installation
 
-### Homebrew (macOS / Linux)
-
-```bash
-brew tap purplemet/cli
-brew install purplemet-cli
-```
-
 ### Binary
 
 Download from [Releases](https://github.com/purplemet/cli/releases).
