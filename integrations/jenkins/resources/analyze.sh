@@ -1,0 +1,1 @@
+../../shared/analyze.sh
