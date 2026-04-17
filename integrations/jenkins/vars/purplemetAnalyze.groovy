@@ -30,7 +30,7 @@
  *       failOnSensitiveServices: false,      // optional — fail if sensitive services exposed
  *       format: 'json',                      // optional — output format: json, human, sarif, html
  *       noCreate: false,                     // optional — don't auto-create site if URL not found
- *       timeout: '300000',                   // optional, ms
+ *       timeout: '1800000',                  // optional, ms (default 30 min)
  *       version: 'latest',                   // optional
  *       baseUrl: '',                         // optional, API base URL override
  *       basicUser: '',                       // optional, HTTP Basic Auth user (dev API)
@@ -57,7 +57,7 @@ def call(Map config = [:]) {
         "PATH=${env.HOME}/.local/bin:${env.PATH}",
         "PURPLEMET_TARGET_URL=${targetUrl}",
         "PURPLEMET_FAIL_SEVERITY=${config.get('failSeverity', 'high')}",
-        "PURPLEMET_WAIT_TIMEOUT=${config.get('timeout', '300000')}",
+        "PURPLEMET_WAIT_TIMEOUT=${config.get('timeout', '1800000')}",
         "PURPLEMET_FORMAT=${config.get('format', 'json')}",
         "PURPLEMET_FAIL_RATING=${config.get('failRating', '')}",
         "PURPLEMET_FAIL_CVSS=${config.get('failCvss', '0')}",
