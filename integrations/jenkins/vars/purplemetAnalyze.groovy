@@ -95,6 +95,18 @@ def call(Map config = [:]) {
     writeFile file: '/tmp/purplemet-analyze.sh', text: analyzeScript
     sh "chmod +x /tmp/purplemet-analyze.sh"
 
+    // Derive report filename from the configured format so archiveArtifacts
+    // picks up the right file when format != 'json'.
+    def format = config.get('format', 'json')
+    def ext
+    switch (format) {
+        case 'sarif': ext = 'sarif'; break
+        case 'html':  ext = 'html';  break
+        case 'human': ext = 'txt';   break
+        default:      ext = 'json'
+    }
+    def reportFile = "purplemet-report.${ext}"
+
     withCredentials([string(credentialsId: tokenCredId, variable: 'PURPLEMET_API_TOKEN')]) {
       withEnv(envVars) {
         // Delegate to shared analysis script
@@ -103,8 +115,8 @@ def call(Map config = [:]) {
             returnStatus: true
         )
 
-        // Archive report
-        archiveArtifacts artifacts: 'purplemet-report.json', allowEmptyArchive: true
+        // Archive report (filename depends on format)
+        archiveArtifacts artifacts: reportFile, allowEmptyArchive: true
 
         if (exitCode == 1) {
             unstable("Purplemet: security gate(s) failed")

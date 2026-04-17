@@ -16,6 +16,17 @@ def call(Map config = [:]) {
         error("Invalid version format '${version}': expected 'latest' or 'vX.Y.Z'")
     }
 
+    // Skip install when the binary is already on PATH (e.g. Docker agent
+    // using ppmsupport/purplemet-cli image, or host agent with CLI pre-installed).
+    def alreadyInstalled = sh(
+        script: 'command -v purplemet-cli >/dev/null 2>&1',
+        returnStatus: true
+    ) == 0
+    if (alreadyInstalled) {
+        echo "purplemet-cli already on PATH, skipping install"
+        return
+    }
+
     def installScript = libraryResource('install.sh')
     writeFile file: '/tmp/purplemet-install.sh', text: installScript
     sh "chmod +x /tmp/purplemet-install.sh"
