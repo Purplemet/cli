@@ -18,12 +18,13 @@ def call(Map config = [:]) {
 
     // Skip install when the binary is already on PATH (e.g. Docker agent
     // using ppmsupport/purplemet-cli image, or host agent with CLI pre-installed).
+    // Also check ~/.local/bin where a previous run may have fallen back to.
     def alreadyInstalled = sh(
-        script: 'command -v purplemet-cli >/dev/null 2>&1',
+        script: 'command -v purplemet-cli >/dev/null 2>&1 || [ -x "$HOME/.local/bin/purplemet-cli" ]',
         returnStatus: true
     ) == 0
     if (alreadyInstalled) {
-        echo "purplemet-cli already on PATH, skipping install"
+        echo "purplemet-cli already installed, skipping install"
         return
     }
 

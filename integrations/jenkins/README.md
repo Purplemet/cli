@@ -16,7 +16,6 @@ pipeline {
             steps {
                 purplemetAnalyze(
                     url: 'https://your-app.example.com',
-                    token: 'PURPLEMET_API_TOKEN',
                     failSeverity: 'high'
                 )
             }
@@ -59,7 +58,6 @@ pipeline {
             steps {
                 purplemetAnalyze(
                     url: 'https://your-app.example.com',
-                    token: 'PURPLEMET_API_TOKEN',
                     failSeverity: 'high'
                 )
             }
@@ -77,7 +75,6 @@ node {
     stage('Security Analysis') {
         purplemetAnalyze(
             url: 'https://your-app.example.com',
-            token: 'PURPLEMET_API_TOKEN',
             failSeverity: 'medium',
             timeout: '600000'
         )
@@ -138,6 +135,8 @@ All parameters are passed as named arguments to `purplemetAnalyze(...)`.
 | `timeout` | No | `'300000'` | Polling timeout in milliseconds (0 = unlimited) |
 | `format` | No | `'json'` | Output format: `json`, `human`, `sarif`, `html` |
 | `noCreate` | No | `false` | Do not auto-create site if URL not found |
+
+> `token` defaults to `PURPLEMET_API_TOKEN` — with a credential of that ID, you don't need to set it. Only override if your credential ID differs (e.g. `token: 'MY_CUSTOM_CREDENTIAL_ID'`).
 
 ### Severity gates
 

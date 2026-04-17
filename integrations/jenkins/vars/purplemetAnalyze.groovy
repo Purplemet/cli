@@ -49,8 +49,12 @@ def call(Map config = [:]) {
     // Install CLI
     purplemetInstall(version: version)
 
-    // Map Groovy config to PURPLEMET_* env vars for analyze.sh
+    // Map Groovy config to PURPLEMET_* env vars for analyze.sh.
+    // Prepend ~/.local/bin to PATH so analyze.sh finds purplemet-cli when
+    // install fell back there (no sudo + /usr/local/bin not writable).
+    // This is a no-op when the binary is in /usr/local/bin or already on PATH.
     def envVars = [
+        "PATH=${env.HOME}/.local/bin:${env.PATH}",
         "PURPLEMET_TARGET_URL=${targetUrl}",
         "PURPLEMET_FAIL_SEVERITY=${config.get('failSeverity', 'high')}",
         "PURPLEMET_WAIT_TIMEOUT=${config.get('timeout', '300000')}",
