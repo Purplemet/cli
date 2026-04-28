@@ -179,3 +179,5 @@ case "$SHELL_NAME" in
     fi
     ;;
 esac
+
+echo "[*] Open a new terminal (or run 'exec \$SHELL') to activate shell completions."
