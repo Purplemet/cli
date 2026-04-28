@@ -1,31 +1,31 @@
 class PurplemetCli < Formula
   desc "CLI for Purplemet web application security analysis"
   homepage "https://purplemet.com"
-  version "1.1.15"
+  version "1.1.16"
   license "Proprietary"
 
   on_macos do
     if Hardware::CPU.arm?
-      url "https://github.com/Purplemet/cli/releases/download/v1.1.15/purplemet-cli-darwin-arm64"
-      sha256 "9982cf3b3ee4b5f016787806a80093c6a025bca9faf1f0c7213d75e0cdbaf897"
+      url "https://github.com/Purplemet/cli/releases/download/v1.1.16/purplemet-cli-darwin-arm64"
+      sha256 "1cfc3113b37cddd992a5c1f4fe86decdd1a64a82b03c4117365d6c97c72c3da8"
     else
-      url "https://github.com/Purplemet/cli/releases/download/v1.1.15/purplemet-cli-darwin-amd64"
-      sha256 "230602f69b8164dc267678805c4e314a193f811e568bf79a59dfee134774fdc3"
+      url "https://github.com/Purplemet/cli/releases/download/v1.1.16/purplemet-cli-darwin-amd64"
+      sha256 "5ac0309c2b5207b941bf169c0c51cf849100b358bca63273bade3196473e2a8a"
     end
   end
 
   on_linux do
     if Hardware::CPU.arm?
-      url "https://github.com/Purplemet/cli/releases/download/v1.1.15/purplemet-cli-linux-arm64"
-      sha256 "b0a783169206d97d8336fd453918470a887a00c6eae74f9d432b5ff5b87d0bab"
+      url "https://github.com/Purplemet/cli/releases/download/v1.1.16/purplemet-cli-linux-arm64"
+      sha256 "c50f2d9109eacc7a986560f864a2c4f4d7ab80010338886fe180b035a2c7d8bd"
     else
-      url "https://github.com/Purplemet/cli/releases/download/v1.1.15/purplemet-cli-linux-amd64"
-      sha256 "2dc236497ba7e2bbed526c10beede78ea789fdb2dcf45e01a91f42b894453183"
+      url "https://github.com/Purplemet/cli/releases/download/v1.1.16/purplemet-cli-linux-amd64"
+      sha256 "33a8f6daaffa0732c11ffbde90af37e2d04d2bd3da97f297ede47579be9c2c80"
     end
   end
 
   resource "completions" do
-    url "https://github.com/Purplemet/cli/releases/download/v1.1.15/completions.tar"
+    url "https://github.com/Purplemet/cli/releases/download/v1.1.16/completions.tar"
     sha256 "97e220c6b30f36c937444929d91227a09228e30841beb8c09008921b6b8618c3"
   end
 
