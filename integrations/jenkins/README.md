@@ -145,7 +145,6 @@ All parameters are passed as named arguments to `purplemetAnalyze(...)`.
 | `failSeverity` | `'high'` | Fail if issues at or above this severity: `critical`, `high`, `medium`, `low`, `info` |
 | `failRating` | — | Fail if rating is at or below this grade (`A`-`F`) |
 | `failOnIssueCount` | `'0'` | Fail if total issue count >= this value |
-| `excludeIgnored` | `false` | Exclude ignored issues from gate evaluation |
 
 ### CVE / exploitability gates
 
@@ -199,6 +198,8 @@ All parameters are passed as named arguments to `purplemetAnalyze(...)`.
 ## Artifacts
 
 The analysis report is saved as `purplemet-report.json` and archived as a build artifact.
+
+> **HTML report rendering:** if you publish the report inline via HTML Publisher (`format: 'html'`), Jenkins' default Content Security Policy strips the report's inline CSS and the page renders unstyled. See [Enabling CSS in the Jenkins-rendered report](https://dev.purplemet.com/purplemet/integrations/cli/-/blob/main/docs/integrations/jenkins.md#enabling-css-in-the-jenkins-rendered-report) for the fix.
 
 ## Complete Example
 

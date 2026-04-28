@@ -16,7 +16,6 @@
  *       failOnSsl: false,                    // optional
  *       failOnCert: false,                   // optional
  *       excludeTech: '',                     // optional (comma-separated)
- *       excludeIgnored: false,               // optional
  *       failOnHeaders: false,                // optional — HTTP security headers (CSP, HSTS)
  *       failOnCookies: false,                // optional — insecure cookies
  *       failOnUnsafe: false,                 // optional — unsafe components
@@ -65,7 +64,6 @@ def call(Map config = [:]) {
         "PURPLEMET_FAIL_ON_SSL=${config.get('failOnSsl', false)}",
         "PURPLEMET_FAIL_ON_CERT=${config.get('failOnCert', false)}",
         "PURPLEMET_EXCLUDE_TECH=${config.get('excludeTech', '')}",
-        "PURPLEMET_EXCLUDE_IGNORED=${config.get('excludeIgnored', false)}",
         "PURPLEMET_FAIL_ON_HEADERS=${config.get('failOnHeaders', false)}",
         "PURPLEMET_FAIL_ON_COOKIES=${config.get('failOnCookies', false)}",
         "PURPLEMET_FAIL_ON_UNSAFE=${config.get('failOnUnsafe', false)}",
