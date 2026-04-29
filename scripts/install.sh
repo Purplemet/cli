@@ -49,7 +49,9 @@ curl -sSLf "$DOWNLOAD_URL" -o "/tmp/${FILENAME}" || {
 # Verify checksum if available
 CHECKSUMS_URL="${DOWNLOAD_URL%/*}/checksums.txt"
 if curl -sSLf "$CHECKSUMS_URL" -o "/tmp/checksums.txt" 2>/dev/null; then
-  EXPECTED=$(grep "$FILENAME" /tmp/checksums.txt | awk '{print $1}')
+  # Exact filename match: grep "$FILENAME" would also match "$FILENAME.tar.gz"
+  # since v1.1.20 introduced platform tarballs sharing the same prefix.
+  EXPECTED=$(awk -v f="$FILENAME" '$2 == f {print $1; exit}' /tmp/checksums.txt)
   if [ -n "$EXPECTED" ]; then
     if command -v sha256sum > /dev/null 2>&1; then
       ACTUAL=$(sha256sum "/tmp/${FILENAME}" | awk '{print $1}')
