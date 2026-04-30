@@ -100,6 +100,43 @@ fi
 echo "[*] Installed ${BINARY} ${VERSION}:"
 "${INSTALLED_TO}/${BINARY}${EXT}" version
 
+# Install man pages (best-effort: skipped on Windows or if download / extract fails).
+# Uses the same write-strategy as the binary: writable dir, then sudo, then ~/.local.
+if [ "$OS" != "windows" ]; then
+  MAN_URL="${DOWNLOAD_URL%/*}/man.tar"
+  MAN_TMP="/tmp/purplemet-man.tar"
+  if curl -sSLf "$MAN_URL" -o "$MAN_TMP" 2>/dev/null; then
+    MAN_SYS_DIR="/usr/local/share/man/man1"
+    [ "$OS" = "darwin" ] && [ "$ARCH" = "arm64" ] && MAN_SYS_DIR="/opt/homebrew/share/man/man1"
+    MAN_INSTALLED_TO=""
+    if [ -d "$(dirname "$MAN_SYS_DIR")" ] && [ -w "$(dirname "$MAN_SYS_DIR")" ]; then
+      mkdir -p "$MAN_SYS_DIR" 2>/dev/null && tar -xf "$MAN_TMP" -C "$MAN_SYS_DIR" 2>/dev/null \
+        && MAN_INSTALLED_TO="$MAN_SYS_DIR"
+    elif command -v sudo > /dev/null 2>&1 && sudo -n true 2>/dev/null; then
+      sudo mkdir -p "$MAN_SYS_DIR" 2>/dev/null && sudo tar -xf "$MAN_TMP" -C "$MAN_SYS_DIR" 2>/dev/null \
+        && MAN_INSTALLED_TO="$MAN_SYS_DIR"
+    fi
+    if [ -z "$MAN_INSTALLED_TO" ]; then
+      MAN_USER_DIR="${HOME}/.local/share/man/man1"
+      mkdir -p "$MAN_USER_DIR" 2>/dev/null && tar -xf "$MAN_TMP" -C "$MAN_USER_DIR" 2>/dev/null \
+        && MAN_INSTALLED_TO="$MAN_USER_DIR"
+    fi
+    rm -f "$MAN_TMP"
+    if [ -n "$MAN_INSTALLED_TO" ]; then
+      echo "[*] Man pages installed in ${MAN_INSTALLED_TO} (try: man ${BINARY})"
+      # ~/.local/share/man is not in macOS default MANPATH — point user to the fix.
+      case "$MAN_INSTALLED_TO" in
+        "$HOME"/.local/*)
+          if ! man -w "${BINARY}" >/dev/null 2>&1; then
+            echo "    If 'man ${BINARY}' fails, add to your shell rc:"
+            echo "      export MANPATH=\"\$HOME/.local/share/man:\$MANPATH\""
+          fi
+          ;;
+      esac
+    fi
+  fi
+fi
+
 # Install shell completions for the user's current shell, when possible.
 # Skipped on Windows, in CI (interactive feature), and when the shell is unknown —
 # completions are best-effort and never block a successful binary install.
